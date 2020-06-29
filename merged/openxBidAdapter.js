@@ -59,7 +59,7 @@ function isBidRequestValid(bidRequest) {
 }
 
 function buildRequests(bids, bidderRequest) {
-  const testRate = window.openxTestRate || 0.0;
+  const testRate = window.openxTestRate || bids[0].params.openxTestRate || 0.0;
   if (Math.random() < testRate) {
     return buildOpenRTBRequests(bids, bidderRequest);
   } else {

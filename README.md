@@ -36,4 +36,23 @@ You may also A/B test the two adapters. This would involve calling OpenX from bo
 
 ### Option 3: A/B test with a merged adapter
 
-If you would like to run an A/B test between the old and new methods, but lack an A/B testing framework, we have created a merged adapter with both methods. Download and replace openxRtbAdapter.js with this one https://github.com/openx/prebid-adapter/blob/master/merged/openxBidAdapter.js. This adapter will default to a 50/50 test of the old adapter and the new one. You may edit the experiment in this adapter by changing the `window.openxTestRate `variable to be any value between 0.0 and 1.0. If you would like to run a small test with the new functionality, for example, set `window.openxTestRate` to be 0.1 for a 10% test. After a test period, we will share the results of the A/B test with you and move forward with the better performing adapter. NOTE: unit tests will fail when you attempt to build, just remove the OpenX spec file (https://github.com/prebid/Prebid.js/blob/master/test/spec/modules/openxBidAdapter_spec.js) for now.
+If you would like to run an A/B test between the old and new methods, but lack an A/B testing framework, we have created a merged adapter with both methods. Download and replace openxRtbAdapter.js with this one https://github.com/openx/prebid-adapter/blob/master/merged/openxBidAdapter.js. This adapter will default to a 0% test of new method. You may edit the experiment in this adapter by changing either the `window.openxTestRate` variable or the bidder param `openxTestRate` to be any value between 0.0 and 1.0. If you would like to run a small test with the new functionality, for example, set `openxTestRate` to be 0.1 for a 10% test. After a test period, we will share the results of the A/B test with you and move forward with the better performing adapter.
+
+```
+    var adUnits = [{
+      code: 'div-2',
+      "mediaTypes": {
+        "banner": {
+          "sizes": [[300, 600], [300, 250]],
+        },
+      },
+      bids: [{
+        bidder: 'openx',
+        params: {
+          openxTestRate: 0.1,
+          delDomain: 'something-d.openx.net',
+          unit: 123456789,
+        }
+      }]
+    }];
+```
