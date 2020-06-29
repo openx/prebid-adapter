@@ -101,15 +101,21 @@ function buildArjRequests(bidRequests, bidderRequest) {
 
 function createBannerRequest(bids, bidderRequest) {
   let data = getBaseRequest(bids[0], bidderRequest);
-  data.imp = bids.map(bid => ({
-    id: bid.bidId,
-    tagid: bid.params.unit,
-    banner: {
-      format: toFormat(bid.mediaTypes.banner.sizes),
-      topframe: utils.inIframe() ? 0 : 1
-    },
-    bidfloor: getFloor(bid, 'banner')
-  }));
+  data.imp = bids.map(bid => {
+    let imp = {
+      id: bid.bidId,
+      tagid: bid.params.unit,
+      banner: {
+        format: toFormat(bid.mediaTypes.banner.sizes),
+        topframe: utils.inIframe() ? 0 : 1
+      },
+      bidfloor: getFloor(bid, 'banner')
+    };
+    if (bid.params.customParams) {
+      utils.deepSetValue(imp, 'ext.customParams', bid.params.customParams);
+    }
+    return imp;
+  });
   return {
     method: 'POST',
     url: REQUEST_URL,
@@ -150,6 +156,9 @@ function createVideoRequest(bid, bidderRequest) {
     },
     bidfloor: getFloor(bid, 'video')
   }];
+  if (bid.params.customParams) {
+    utils.deepSetValue(data.imp[[0]], 'ext.customParams', bid.params.customParams);
+  }
   if (bid.params.openrtb) {
     Object.keys(bid.params.openrtb)
       .filter(param => includes(VIDEO_TARGETING, param))
